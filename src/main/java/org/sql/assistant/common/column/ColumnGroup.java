@@ -3,6 +3,7 @@ package org.sql.assistant.common.column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.sql.assistant.select.join.Join;
+import org.sql.assistant.util.StrUtil;
 
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class ColumnGroup implements Join {
 
     @Override
     public String getSql() {
+        if(StrUtil.isNotEmpty(prefix)){
+            table.prefix(prefix);
+        }
         return table.value();
     }
 }

@@ -1,4 +1,4 @@
-package org.sql.assistant.select;
+package org.sql.assistant.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @AllArgsConstructor
 @Data
-public class SelectSql {
+public class SqlHolder {
     private String sql;
 
     private Object[] args;

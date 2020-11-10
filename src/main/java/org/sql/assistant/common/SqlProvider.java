@@ -6,7 +6,6 @@ package org.sql.assistant.common;
  * @author menfre
  */
 public interface SqlProvider {
-
     /**
      * 获得 sql 语句
      *

@@ -6,12 +6,14 @@
 
 sql-assistant 为所有的 sql 语句构造提供了统一的入口。你可以通过 `SqlAssistant` 对象来快速开始。
 ```java
-String sql = SqlAssistant.beginSimpleSelect()
+SqlHolder sqlHolder = SqlAssistant.beginSimpleSelect()
                 .select("name_space", "name", "public_ip", "private_ip")
                 .from("m_node")
                 .where(Conditions.equals("name", "menfre"))
                 .end()
                 .getSql();
+System.out.println(sqlHolder.getSql());
+System.out.println(Arrays.toString(sqlHolder.getArgs()));
 ```
 ## SelectBuilder
 Select 语句根据不同的使用习惯被拆分为三种模式，当然以下三种模式均可以使用 `SqlAssistant` 来快速开始。
@@ -23,27 +25,23 @@ Select 语句根据不同的使用习惯被拆分为三种模式，当然以下�
 为了迎合大部分主流的 orm 框架，`SelectBuilder` 并不会将 where 子句的条件参数拼接到 sql 语句中，而是通过 Object 数组的方式额外提供，sql 语句中的条件参数均以占位符 `?` 代替。
 
 ```java
-SelectSql ss = SqlAssistant.beginSimpleSelect()
+SqlHolder sqlHolder = SqlAssistant.beginSimpleSelect()
                 .select("name_space", "name", "public_ip", "private_ip")
                 .from("m_node")
                 .where(Conditions.equals("name", "menfre"))
                 .end();
-System.out.println(ss.getSql());
-System.out.println(Arrays.toString(ss.getArgs()));
 ```
 
 ### SimpleSelectBuilder
 `SimpleSelectBuilder` 是 `SelectBuilder` 中最简单的一种，能满足常见单表查询的场景。
 
 ```java
-SelectSql ss = SqlAssistant.beginSimpleSelect()
+SqlHolder sqlHolder = SqlAssistant.beginSimpleSelect()
                 .select("name_space", "name", "public_ip", "private_ip")
                 .from("m_node")
                 .orderBy(Sort.of("n.name", Sort.Direction.ASC))
                 .limit(10)
                 .end();
-System.out.println(ss.getSql());
-System.out.println(Arrays.toString(ss.getArgs()));
 ```
 
 ### ComplexSelectBuilder
@@ -52,34 +50,65 @@ System.out.println(Arrays.toString(ss.getArgs()));
 ```java
 ColumnGroup node = Columns.createGroup("n", Column.of("m_node"), Columns.asList("name", "name_space", "public_ip", "private_ip"));
 ColumnGroup label = Columns.createGroup("l", Column.of("m_label"), Columns.asList("label_key", "label_value"));
-SelectSql ss = SqlAssistant.beginComplexSelect()
+SqlHolder sqlHolder = SqlAssistant.beginComplexSelect()
                 .select(node, label)
                 .where(Conditions.columnEquals("n.m_api_object_id", "l.object_id"))
                 .where(Conditions.equals("n.name", "menfre"))
                 .orderBy(Sort.of("n.name", Sort.Direction.ASC))
                 .limit(5, 10)
                 .end();
-System.out.println(ss.getSql());
-System.out.println(Arrays.toString(ss.getArgs()));
 ```
 
 ### JoinSelectBuilder
 
-`JoinSelectBuilder` 是 `SelectBuilder` 最复杂的一种，在 `ComplexSelectBuilder` 增加了 join 子句；能过通过 join 链将不同的 join 子句链接起来，提升 join 逻辑的可读性和易用性。
+`JoinSelectBuilder` 是 `SelectBuilder` 最复杂的一种，在 `ComplexSelectBuilder` 的基础上增加了 join 子句；能过通过 join 链将不同的 join 子句链接起来，提升 join 逻辑的可读性和易用性。
 
 ```java
 ColumnGroup node = Columns.createGroup("n", Column.of("m_node"), Columns.asList("name", "name_space", "public_ip", "private_ip"));
 ColumnGroup label = Columns.createGroup("l", Column.of("m_label"), Columns.asList("label_key", "label_value"));
 Join leftJoin = node.left(label, Conditions.columnEquals("n.m_api_object_id", "l.object_id"));
-SelectSql ss = SqlAssistant.beginJoinSelect()
+SqlHolder sqlHolder = SqlAssistant.beginJoinSelect()
                 .select(node, label)
                 .join(leftJoin)
                 .where(Conditions.equals("n.name", "menfre"))
                 .orderBy(Sort.of("n.name", Sort.Direction.ASC))
                 .limit(5, 10)
                 .end();
-System.out.println(ss.getSql());
-System.out.println(Arrays.toString(ss.getArgs()));
 ```
+
+## InsertBuilder
+
+`InsertBuilder` 支持 `ColumnGroup` 作为参数来执行 insert into 操作。
+
+```java
+ColumnGroup node = Columns.group("m_node", Columns.asList("name", "name_space", "private_ip", "public_ip"));
+SqlHolder sqlHolder = SqlAssistant.beginInsert()
+                .insertInto(node)
+                .values("menfre", "test", "192.168.0.1", "123.3.4.1")
+                .end();
+```
+
+## DeleteBuilder
+
+```java
+SqlHolder sqlHolder = SqlAssistant.beginDelete()
+                .deleteFrom("m_node")
+                .where(Conditions.equals("name", "menfre"))
+                .where(Conditions.equals("name_space", "test"))
+                .end();
+```
+
+## UpdateBuilder
+
+```java
+SqlHolder sqlHolder = SqlAssistant.beginUpdate()
+                .update("m_node")
+                .set("name", "menfre2")
+                .set(UpdateItem.of("name_space", "dev"))
+                .where(Conditions.equals("name", "menfre"))
+                .where(Conditions.equals("name_space", "test"))
+                .end();
+```
+ 
 
 

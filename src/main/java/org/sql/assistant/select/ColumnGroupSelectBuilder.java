@@ -2,6 +2,7 @@ package org.sql.assistant.select;
 
 import org.sql.assistant.common.column.Column;
 import org.sql.assistant.common.column.ColumnGroup;
+import org.sql.assistant.common.column.Columns;
 import org.sql.assistant.util.ListUtil;
 
 import java.util.ArrayList;
@@ -30,11 +31,19 @@ public abstract class ColumnGroupSelectBuilder<T> extends AbstractSelectBuilder<
         return me();
     }
 
+    public void applyPrefix() {
+        this.columnGroups.forEach(cg -> {
+            cg.getTable().prefix(cg.getPrefix());
+            Columns.batchPrefix(cg.getPrefix(), cg.getColumns());
+        });
+    }
+
     @Override
     protected String selectSubSql() {
-        if (!ListUtil.isNotEmpty(this.columnGroups)) {
+        if (ListUtil.isEmpty(this.columnGroups)) {
             return "";
         }
+        applyPrefix();
         StringJoiner sql = new StringJoiner(DELIMITER, SELECT, "");
         this.columnGroups.stream()
                 .map(ColumnGroup::getColumns)

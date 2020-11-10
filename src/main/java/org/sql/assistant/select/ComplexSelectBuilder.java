@@ -14,7 +14,7 @@ import java.util.StringJoiner;
 public class ComplexSelectBuilder extends ColumnGroupSelectBuilder<ComplexSelectBuilder> {
     @Override
     protected String fromSubSql() {
-        if (!ListUtil.isNotEmpty(columnGroups)) {
+        if (ListUtil.isEmpty(columnGroups)) {
             throw new IllegalArgumentException("ColumnGroup less on element, cannot be empty");
         }
         StringJoiner sql = new StringJoiner(DELIMITER, FROM, "");

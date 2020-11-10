@@ -1,10 +1,15 @@
 package org.sql.assistant.select;
 
+import org.sql.assistant.common.SqlBuilder;
+import org.sql.assistant.common.SqlHolder;
 import org.sql.assistant.common.column.Column;
-import org.sql.assistant.common.condition.Condition;
+import org.sql.assistant.common.condition.AbstractConditionBuilder;
 import org.sql.assistant.util.ListUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * 抽象 Select 语句 Builder
@@ -12,16 +17,14 @@ import java.util.*;
  * @param <T>
  * @author menfre
  */
-public abstract class AbstractSelectBuilder<T> implements SelectBuilder {
+public abstract class AbstractSelectBuilder<T> extends AbstractConditionBuilder<T> implements SqlBuilder {
+    protected static final String SELECT = "SELECT ";
+    protected static final String ORDER_BY = " ORDER BY ";
+
     /**
      * 字段列表
      */
     protected List<Column> columns;
-
-    /**
-     * 条件列表
-     */
-    protected List<Condition> conditions;
 
     /**
      * 排序依据列表
@@ -34,7 +37,7 @@ public abstract class AbstractSelectBuilder<T> implements SelectBuilder {
     protected Limit limit;
 
     protected String selectSubSql() {
-        if (!ListUtil.isNotEmpty(columns)) {
+        if (ListUtil.isEmpty(columns)) {
             return "";
         }
         StringJoiner sql = new StringJoiner(DELIMITER, SELECT, "");
@@ -42,17 +45,8 @@ public abstract class AbstractSelectBuilder<T> implements SelectBuilder {
         return sql.toString();
     }
 
-    protected String whereSubSql() {
-        if (!ListUtil.isNotEmpty(conditions)) {
-            return "";
-        }
-        StringJoiner sql = new StringJoiner(AND, WHERE, "");
-        conditions.stream().map(Condition::getSql).forEach(sql::add);
-        return sql.toString();
-    }
-
     protected String sortSubSql() {
-        if (!ListUtil.isNotEmpty(sorts)) {
+        if (ListUtil.isEmpty(sorts)) {
             return "";
         }
         StringJoiner sql = new StringJoiner(DELIMITER, ORDER_BY, "");
@@ -73,21 +67,6 @@ public abstract class AbstractSelectBuilder<T> implements SelectBuilder {
      * @return from 子句
      */
     protected abstract String fromSubSql();
-
-    /**
-     * 返回子类
-     *
-     * @return 子类
-     */
-    protected abstract T me();
-
-    public T where(Condition... conditions) {
-        if (this.conditions == null) {
-            this.conditions = new ArrayList<>();
-        }
-        this.conditions.addAll(Arrays.asList(conditions));
-        return me();
-    }
 
     public T orderBy(Sort... sorts) {
         if (this.sorts == null) {
@@ -121,16 +100,7 @@ public abstract class AbstractSelectBuilder<T> implements SelectBuilder {
     }
 
     @Override
-    public Object[] getArgs() {
-        if (!ListUtil.isNotEmpty(conditions)) {
-            return new Object[0];
-        }
-        List<Object> argList = new ArrayList<>();
-        conditions.stream().map(Condition::getArgs).forEach(args -> argList.addAll(Arrays.asList(args)));
-        return argList.toArray();
-    }
-
-    public SelectSql end() {
-        return new SelectSql(getSql(), getArgs());
+    public SqlHolder end() {
+        return new SqlHolder(getSql(), getArgs());
     }
 }

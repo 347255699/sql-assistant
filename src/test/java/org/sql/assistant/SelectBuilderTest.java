@@ -5,54 +5,91 @@ import org.sql.assistant.common.column.Column;
 import org.sql.assistant.common.column.ColumnGroup;
 import org.sql.assistant.common.column.Columns;
 import org.sql.assistant.common.condition.Conditions;
-import org.sql.assistant.select.SelectSql;
+import org.sql.assistant.common.SqlHolder;
 import org.sql.assistant.select.Sort;
 import org.sql.assistant.select.join.Join;
+import org.sql.assistant.update.UpdateItem;
 
 import java.util.Arrays;
 
 public class SelectBuilderTest {
     @Test
+    public void testUpdate() {
+        SqlHolder sqlHolder = SqlAssistant.beginUpdate()
+                .update("m_node")
+                .set("name", "menfre2")
+                .set(UpdateItem.of("name_space", "dev"))
+                .where(Conditions.equals("name", "menfre"))
+                .where(Conditions.equals("name_space", "test"))
+                .end();
+        System.out.println(sqlHolder.getSql());
+        System.out.println(Arrays.toString(sqlHolder.getArgs()));
+    }
+
+    @Test
+    public void testDelete() {
+        SqlHolder sqlHolder = SqlAssistant.beginDelete()
+                .deleteFrom("m_node")
+                .where(Conditions.equals("name", "menfre"))
+                .where(Conditions.equals("name_space", "test"))
+                .end();
+        System.out.println(sqlHolder.getSql());
+        System.out.println(Arrays.toString(sqlHolder.getArgs()));
+    }
+
+    @Test
+    public void testInsert() {
+        ColumnGroup node = Columns.group("m_node", Columns.asList("name", "name_space", "private_ip", "public_ip"));
+        SqlHolder sqlHolder = SqlAssistant.beginInsert()
+                .insertInto(node)
+                .values("menfre", "test", "192.168.0.1", "123.3.4.1")
+                .end();
+        System.out.println(sqlHolder.getSql());
+        System.out.println(Arrays.toString(sqlHolder.getArgs()));
+    }
+
+    @Test
     public void testSimpleSelect() {
-        SelectSql ss = SqlAssistant.beginSimpleSelect()
+        SqlHolder sqlHolder = SqlAssistant.beginSimpleSelect()
                 .select("name_space", "name", "public_ip", "private_ip")
                 .from("m_node")
                 .where(Conditions.equals("name", "menfre"))
                 .orderBy(Sort.of("name", Sort.Direction.DESC))
                 .limit(5, 10)
                 .end();
-        System.out.println(ss.getSql());
-        System.out.println(Arrays.toString(ss.getArgs()));
+        System.out.println(sqlHolder.getSql());
+        System.out.println(Arrays.toString(sqlHolder.getArgs()));
     }
 
     @Test
     public void testComplexSelect() {
-        ColumnGroup node = Columns.createGroup("n", Column.of("m_node"), Columns.asList("name", "name_space", "public_ip", "private_ip"));
-        ColumnGroup label = Columns.createGroup("l", Column.of("m_label"), Columns.asList("label_key", "label_value"));
-        SelectSql ss = SqlAssistant.beginComplexSelect()
+        ColumnGroup node = Columns.group("n", "m_node", Columns.asList("name", "name_space", "public_ip", "private_ip"));
+        ColumnGroup label = Columns.group("l", "m_label", Columns.asList("label_key", "label_value"));
+        SqlHolder sqlHolder = SqlAssistant.beginComplexSelect()
                 .select(node, label)
                 .where(Conditions.columnEquals("n.m_api_object_id", "l.object_id"))
                 .where(Conditions.equals("n.name", "menfre"))
                 .orderBy(Sort.of("n.name", Sort.Direction.ASC))
                 .limit(5, 10)
                 .end();
-        System.out.println(ss.getSql());
-        System.out.println(Arrays.toString(ss.getArgs()));
+        System.out.println(sqlHolder.getSql());
+        System.out.println(Arrays.toString(sqlHolder.getArgs()));
     }
 
     @Test
     public void testJoinSelect() {
-        ColumnGroup node = Columns.createGroup("n", Column.of("m_node"), Columns.asList("name", "name_space", "public_ip", "private_ip"));
-        ColumnGroup label = Columns.createGroup("l", Column.of("m_label"), Columns.asList("label_key", "label_value"));
+        ColumnGroup node = Columns.group("n", "m_node", Columns.asList("name", "name_space", "public_ip", "private_ip"));
+        ColumnGroup label = Columns.group("l", "m_label", Columns.asList("label_key", "label_value"));
         Join leftJoin = node.left(label, Conditions.columnEquals("n.m_api_object_id", "l.object_id"));
-        SelectSql ss = SqlAssistant.beginJoinSelect()
+        leftJoin = leftJoin.left(Join.of(Column.of("m_api_object").as("o")), Conditions.columnEquals("n.fx_api_object_id", "o.id"));
+        SqlHolder sqlHolder = SqlAssistant.beginJoinSelect()
                 .select(node, label)
                 .join(leftJoin)
                 .where(Conditions.equals("n.name", "menfre"))
                 .orderBy(Sort.of("n.name", Sort.Direction.ASC))
                 .limit(5, 10)
                 .end();
-        System.out.println(ss.getSql());
-        System.out.println(Arrays.toString(ss.getArgs()));
+        System.out.println(sqlHolder.getSql());
+        System.out.println(Arrays.toString(sqlHolder.getArgs()));
     }
 }
