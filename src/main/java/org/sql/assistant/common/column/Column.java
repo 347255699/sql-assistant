@@ -3,6 +3,7 @@ package org.sql.assistant.common.column;
 import org.sql.assistant.util.StrUtil;
 
 /**
+ * column 对象
  * @author menfre
  */
 public class Column {
@@ -36,10 +37,10 @@ public class Column {
     }
 
     /**
-     * 获得 SelectColumn
+     * 获得 Column
      *
      * @param value 数值
-     * @return SelectColumn
+     * @return Column
      */
     public static Column of(String value) {
         return new Column(value);

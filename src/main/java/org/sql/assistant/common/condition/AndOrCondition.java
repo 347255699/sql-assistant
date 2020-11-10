@@ -3,27 +3,38 @@ package org.sql.assistant.common.condition;
 import lombok.AllArgsConstructor;
 
 /**
+ * And/Or 拼接条件
+ *
  * @author menfre
  */
 @AllArgsConstructor
 public class AndOrCondition implements Condition {
-    private final Condition first;
+    /**
+     * 拼接左边条件
+     */
+    private final Condition left;
 
+    /**
+     * 拼接符号标记
+     */
     private final boolean isOr;
 
-    private final Condition second;
+    /**
+     * 拼接右边符号
+     */
+    private final Condition right;
 
     @Override
     public String getSql() {
         String linker = isOr ? " OR " : " AND ";
-        return "(" + first.getSql() + linker + second.getSql() + ")";
+        return "(" + left.getSql() + linker + right.getSql() + ")";
     }
 
     @Override
     public Object[] getArgs() {
-        Object[] args = new Object[first.getArgs().length + second.getArgs().length];
-        System.arraycopy(first.getArgs(), 0, args, 0, first.getArgs().length);
-        System.arraycopy(second.getArgs(), 0, args, first.getArgs().length, second.getArgs().length);
+        Object[] args = new Object[left.getArgs().length + right.getArgs().length];
+        System.arraycopy(left.getArgs(), 0, args, 0, left.getArgs().length);
+        System.arraycopy(right.getArgs(), 0, args, left.getArgs().length, right.getArgs().length);
         return args;
     }
 }

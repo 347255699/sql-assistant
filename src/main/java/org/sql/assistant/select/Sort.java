@@ -4,6 +4,8 @@ import lombok.Data;
 import org.sql.assistant.common.column.Column;
 
 /**
+ * 排序依据
+ *
  * @author menfre
  */
 @Data
@@ -19,13 +21,19 @@ public class Sort {
         return sort;
     }
 
+    /**
+     * 排序字段
+     */
     private Column column;
 
+    /**
+     * 排序类型
+     */
     private Direction direction;
 
     public enum Direction {
         /**
-         * 顺序
+         * sort type
          */
         ASC("ASC"),
         DESC("DESC"),

@@ -5,6 +5,8 @@ import org.sql.assistant.common.column.Column;
 import java.util.StringJoiner;
 
 /**
+ * 复杂一点的条件
+ *
  * @author menfre
  */
 public class ComplexCondition extends AbstractCondition {

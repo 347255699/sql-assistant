@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import org.sql.assistant.common.column.Column;
 
 /**
+ * 参与 Join 的 Table
+ *
  * @author menfre
  */
 @AllArgsConstructor
-public class HalfJoin implements Join {
+public class JoinTable implements Join {
     /**
      * 表字段
      */

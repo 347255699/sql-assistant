@@ -1,7 +1,7 @@
 package org.sql.assistant.common.condition;
 
 /**
- * where 子句操作符
+ * Condition 操作符
  *
  * @author menfre
  */

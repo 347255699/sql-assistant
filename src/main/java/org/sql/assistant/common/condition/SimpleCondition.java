@@ -3,6 +3,8 @@ package org.sql.assistant.common.condition;
 import org.sql.assistant.common.column.Column;
 
 /**
+ * 简单一点的条件
+ *
  * @author menfre
  */
 public class SimpleCondition extends AbstractCondition {

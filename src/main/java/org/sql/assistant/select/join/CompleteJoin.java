@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.sql.assistant.common.condition.Condition;
 
 /**
+ * 复杂 join
+ *
  * @author menfre
  */
 @AllArgsConstructor

@@ -3,6 +3,8 @@ package org.sql.assistant.util;
 import java.util.List;
 
 /**
+ * List 工具
+ *
  * @author menfre
  */
 public class ListUtil {

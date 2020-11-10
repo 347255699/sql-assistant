@@ -31,7 +31,7 @@ public interface Join extends SqlProvider {
     }
 
     /**
-     * 内 链接
+     * 内链接
      *
      * @param join      待链接对象
      * @param condition 链接条件
@@ -81,7 +81,7 @@ public interface Join extends SqlProvider {
      * @return 链接对象
      */
     static Join of(Column table) {
-        return new HalfJoin(table);
+        return new JoinTable(table);
     }
 
     /**
