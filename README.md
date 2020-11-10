@@ -59,7 +59,7 @@ SqlHolder sqlHolder = SqlAssistant.beginComplexSelect()
 
 ### JoinSelectBuilder
 
-`JoinSelectBuilder` 是 `SelectBuilder` 最复杂的一种，在 `ComplexSelectBuilder` 的基础上增加了 join 子句；能过通过 join 链将不同的 join 子句链接起来，提升 join 逻辑的可读性和易用性。
+`JoinSelectBuilder` 是 `SelectBuilder` 最复杂的一种，在 `ComplexSelectBuilder` 的基础上增加了 join 子句；能够通过 join 链将不同的 join 子句链接起来，提升 join 逻辑的可读性和易用性。
 
 ```java
 ColumnGroup node = Columns.createGroup("n", "m_node", Columns.asList("name", "name_space", "public_ip", "private_ip"));
