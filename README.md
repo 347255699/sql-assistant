@@ -9,8 +9,7 @@ SqlHolder sqlHolder = SqlAssistant.beginSimpleSelect()
                 .select("name_space", "name", "public_ip", "private_ip")
                 .from("m_node")
                 .where(Conditions.equals("name", "menfre"))
-                .end()
-                .getSql();
+                .end();
 System.out.println(sqlHolder.getSql());
 System.out.println(Arrays.toString(sqlHolder.getArgs()));
 ```
