@@ -47,8 +47,8 @@ SqlHolder sqlHolder = SqlAssistant.beginSimpleSelect()
 `ComplexSelectBuilder` 对比 `SimpleSelectBuilder` 增加了多表查询的能力，多表可以通过 `ColumnGroup` 对象维护起来。这种模式通常适用于多表查询且链接条件比较简单的情况。
 
 ```java
-ColumnGroup node = Columns.createGroup("n", Column.of("m_node"), Columns.asList("name", "name_space", "public_ip", "private_ip"));
-ColumnGroup label = Columns.createGroup("l", Column.of("m_label"), Columns.asList("label_key", "label_value"));
+ColumnGroup node = Columns.createGroup("n", "m_node", Columns.asList("name", "name_space", "public_ip", "private_ip"));
+ColumnGroup label = Columns.createGroup("l", "m_label", Columns.asList("label_key", "label_value"));
 SqlHolder sqlHolder = SqlAssistant.beginComplexSelect()
                 .select(node, label)
                 .where(Conditions.columnEquals("n.m_api_object_id", "l.object_id"))
@@ -63,8 +63,8 @@ SqlHolder sqlHolder = SqlAssistant.beginComplexSelect()
 `JoinSelectBuilder` 是 `SelectBuilder` 最复杂的一种，在 `ComplexSelectBuilder` 的基础上增加了 join 子句；能过通过 join 链将不同的 join 子句链接起来，提升 join 逻辑的可读性和易用性。
 
 ```java
-ColumnGroup node = Columns.createGroup("n", Column.of("m_node"), Columns.asList("name", "name_space", "public_ip", "private_ip"));
-ColumnGroup label = Columns.createGroup("l", Column.of("m_label"), Columns.asList("label_key", "label_value"));
+ColumnGroup node = Columns.createGroup("n", "m_node", Columns.asList("name", "name_space", "public_ip", "private_ip"));
+ColumnGroup label = Columns.createGroup("l", "m_label", Columns.asList("label_key", "label_value"));
 Join leftJoin = node.left(label, Conditions.columnEquals("n.m_api_object_id", "l.object_id"));
 SqlHolder sqlHolder = SqlAssistant.beginJoinSelect()
                 .select(node, label)
