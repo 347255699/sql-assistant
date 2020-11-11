@@ -1,5 +1,6 @@
 package org.sql.assistant;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.sql.assistant.common.column.Column;
 import org.sql.assistant.common.column.ColumnGroup;
@@ -12,7 +13,7 @@ import org.sql.assistant.update.UpdateItem;
 
 import java.util.Arrays;
 
-public class SelectBuilderTest {
+public class SqlBuilderTest {
     @Test
     public void testUpdate() {
         SqlHolder sqlHolder = SqlAssistant.beginUpdate()
@@ -22,8 +23,9 @@ public class SelectBuilderTest {
                 .where(Conditions.equals("name", "menfre"))
                 .where(Conditions.equals("name_space", "test"))
                 .end();
-        System.out.println(sqlHolder.getSql());
-        System.out.println(Arrays.toString(sqlHolder.getArgs()));
+        Assertions.assertEquals("UPDATE m_node SET name = ?, name_space = ? WHERE name = ? AND name_space = ?;"
+                , sqlHolder.getSql());
+        Assertions.assertArrayEquals(new Object[]{"menfre2", "dev", "menfre", "test"}, sqlHolder.getArgs());
     }
 
     @Test
@@ -33,8 +35,8 @@ public class SelectBuilderTest {
                 .where(Conditions.equals("name", "menfre"))
                 .where(Conditions.equals("name_space", "test"))
                 .end();
-        System.out.println(sqlHolder.getSql());
-        System.out.println(Arrays.toString(sqlHolder.getArgs()));
+        Assertions.assertEquals("DELETE FROM m_node WHERE name = ? AND name_space = ?;", sqlHolder.getSql());
+        Assertions.assertArrayEquals(new Object[]{"menfre", "test"}, sqlHolder.getArgs());
     }
 
     @Test
@@ -44,8 +46,9 @@ public class SelectBuilderTest {
                 .insertInto(node)
                 .values("menfre", "test", "192.168.0.1", "123.3.4.1")
                 .end();
-        System.out.println(sqlHolder.getSql());
-        System.out.println(Arrays.toString(sqlHolder.getArgs()));
+
+        Assertions.assertEquals("INSERT INTO m_node(name, name_space, private_ip, public_ip)VALUES(?, ?, ?, ?);", sqlHolder.getSql());
+        Assertions.assertArrayEquals(new Object[]{"menfre", "test", "192.168.0.1", "123.3.4.1"}, sqlHolder.getArgs());
     }
 
     @Test
@@ -57,8 +60,8 @@ public class SelectBuilderTest {
                 .orderBy(Sort.of("name", Sort.Direction.DESC))
                 .limit(5, 10)
                 .end();
-        System.out.println(sqlHolder.getSql());
-        System.out.println(Arrays.toString(sqlHolder.getArgs()));
+        Assertions.assertEquals("SELECT name_space, name, public_ip, private_ip FROM m_node WHERE name = ? ORDER BY name DESC LIMIT 5, 10;", sqlHolder.getSql());
+        Assertions.assertArrayEquals(new Object[]{"menfre"}, sqlHolder.getArgs());
     }
 
     @Test
@@ -72,8 +75,8 @@ public class SelectBuilderTest {
                 .orderBy(Sort.of("n.name", Sort.Direction.ASC))
                 .limit(5, 10)
                 .end();
-        System.out.println(sqlHolder.getSql());
-        System.out.println(Arrays.toString(sqlHolder.getArgs()));
+        Assertions.assertEquals("SELECT n.name, n.name_space, n.public_ip, n.private_ip, l.label_key, l.label_value FROM n.m_node, l.m_label WHERE n.m_api_object_id = l.object_id AND n.name = ? ORDER BY n.name ASC LIMIT 5, 10;", sqlHolder.getSql());
+        Assertions.assertArrayEquals(new Object[]{"menfre"}, sqlHolder.getArgs());
     }
 
     @Test
@@ -89,7 +92,7 @@ public class SelectBuilderTest {
                 .orderBy(Sort.of("n.name", Sort.Direction.ASC))
                 .limit(5, 10)
                 .end();
-        System.out.println(sqlHolder.getSql());
-        System.out.println(Arrays.toString(sqlHolder.getArgs()));
+        Assertions.assertEquals("SELECT n.name, n.name_space, n.public_ip, n.private_ip, l.label_key, l.label_value FROM (n.m_node LEFT JOIN l.m_label ON n.m_api_object_id = l.object_id) LEFT JOIN m_api_object AS o ON n.fx_api_object_id = o.id WHERE n.name = ? ORDER BY n.name ASC LIMIT 5, 10;", sqlHolder.getSql());
+        Assertions.assertArrayEquals(new Object[]{"menfre"}, sqlHolder.getArgs());
     }
 }

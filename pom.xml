@@ -23,6 +23,7 @@
     <properties>
         <lombok.version>1.18.16</lombok.version>
         <junit-jupiter-api.version>5.7.0</junit-jupiter-api.version>
+        <slf4j.version>1.7.30</slf4j.version>
     </properties>
 
     <dependencies>
@@ -37,6 +38,13 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit-jupiter-api.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.30</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
