@@ -1,4 +1,6 @@
 # sql-assistant
+![](https://img.shields.io/badge/license-Apache%202-blue)  
+
 一个简洁易用的 SQL Builder，能够让你通过 java 的链式调用方式来编写复杂的 sql 语句。
 
 ## Common
