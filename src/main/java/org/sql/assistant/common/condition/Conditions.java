@@ -2,6 +2,7 @@ package org.sql.assistant.common.condition;
 
 import org.sql.assistant.common.column.Column;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -98,11 +99,11 @@ public class Conditions {
         return complexCondition(column, Operator.LIKE, new Object[]{arg});
     }
 
-    public static Condition in(String column, List<Object> args) {
+    public static Condition in(String column, Collection<Object> args) {
         return in(Column.of(column), args);
     }
 
-    public static Condition in(Column column, List<Object> args) {
+    public static Condition in(Column column, Collection<Object> args) {
         return complexCondition(column, Operator.IN, args.toArray());
     }
 

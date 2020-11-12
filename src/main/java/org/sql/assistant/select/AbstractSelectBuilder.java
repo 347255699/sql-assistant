@@ -38,7 +38,7 @@ public abstract class AbstractSelectBuilder<T> extends AbstractConditionBuilder<
 
     protected String selectSubSql() {
         if (ListUtil.isEmpty(columns)) {
-            return "";
+            return SELECT + "*";
         }
         StringJoiner sql = new StringJoiner(DELIMITER, SELECT, "");
         columns.stream().map(Column::value).forEach(sql::add);
