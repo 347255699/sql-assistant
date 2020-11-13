@@ -22,8 +22,16 @@ public class Columns {
         return new ColumnGroup(prefix, Column.of(table), columns);
     }
 
+    public static ColumnGroup group(String prefix, String table, Column... columns) {
+        return new ColumnGroup(prefix, Column.of(table), Arrays.asList(columns));
+    }
+
     public static ColumnGroup group(String table, List<Column> columns) {
         return new ColumnGroup("", Column.of(table), columns);
+    }
+
+    public static ColumnGroup group(String table, Column... columns) {
+        return new ColumnGroup("", Column.of(table), Arrays.asList(columns));
     }
 
     public static Column prefix(String value, String prefix) {

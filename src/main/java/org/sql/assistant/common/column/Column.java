@@ -4,6 +4,7 @@ import org.sql.assistant.util.StrUtil;
 
 /**
  * column 对象
+ *
  * @author menfre
  */
 public class Column {
@@ -22,8 +23,23 @@ public class Column {
      */
     private String prefix;
 
+    /**
+     * 默认值
+     */
+    private String defaultVal;
+
     private Column(String value) {
         this.value = value;
+    }
+
+    public Column ifNull(int defaultVal) {
+        this.defaultVal = String.valueOf(defaultVal);
+        return this;
+    }
+
+    public Column ifNull(String defaultVal) {
+        this.defaultVal = "'" + defaultVal + "'";
+        return this;
     }
 
     public Column as(String alias) {
@@ -53,6 +69,9 @@ public class Column {
         String value = this.value;
         if (StrUtil.isNotEmpty(prefix)) {
             value = prefix.concat(".").concat(this.value);
+        }
+        if (StrUtil.isNotEmpty(defaultVal)) {
+            value = String.format("IFNULL(%s, %s)", value, defaultVal);
         }
         if (StrUtil.isNotEmpty(alias)) {
             value = value.concat(" AS ").concat(this.alias);
