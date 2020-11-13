@@ -3,7 +3,6 @@ package org.sql.assistant.common.condition;
 import org.sql.assistant.common.column.Column;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Condition 工具
@@ -99,19 +98,19 @@ public class Conditions {
         return complexCondition(column, Operator.LIKE, new Object[]{arg});
     }
 
-    public static Condition in(String column, Collection<Object> args) {
+    public static Condition in(String column, Collection<?> args) {
         return in(Column.of(column), args);
     }
 
-    public static Condition in(Column column, Collection<Object> args) {
+    public static Condition in(Column column, Collection<?> args) {
         return complexCondition(column, Operator.IN, args.toArray());
     }
 
-    public static Condition notIn(String column, List<Object> args) {
+    public static Condition notIn(String column, Collection<?> args) {
         return notIn(Column.of(column), args);
     }
 
-    public static Condition notIn(Column column, List<Object> args) {
+    public static Condition notIn(Column column, Collection<?> args) {
         return complexCondition(column, Operator.NOT_IN, args.toArray());
     }
 
