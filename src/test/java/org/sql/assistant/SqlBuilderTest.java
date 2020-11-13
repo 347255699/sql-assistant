@@ -75,7 +75,7 @@ public class SqlBuilderTest {
                 .orderBy(Sort.of("n.name", Sort.Direction.ASC))
                 .limit(5, 10)
                 .end();
-        Assertions.assertEquals("SELECT n.name, n.name_space, n.public_ip, n.private_ip, l.label_key, l.label_value FROM n.m_node, l.m_label WHERE n.m_api_object_id = l.object_id AND n.name = ? ORDER BY n.name ASC LIMIT 5, 10;", sqlHolder.getSql());
+        Assertions.assertEquals("SELECT n.name, n.name_space, n.public_ip, n.private_ip, l.label_key, l.label_value FROM m_node AS n, m_label AS l WHERE n.m_api_object_id = l.object_id AND n.name = ? ORDER BY n.name ASC LIMIT 5, 10;", sqlHolder.getSql());
         Assertions.assertArrayEquals(new Object[]{"menfre"}, sqlHolder.getArgs());
     }
 
@@ -92,7 +92,7 @@ public class SqlBuilderTest {
                 .orderBy(Sort.of("n.name", Sort.Direction.ASC))
                 .limit(5, 10)
                 .end();
-        Assertions.assertEquals("SELECT n.name, n.name_space, n.public_ip, n.private_ip, l.label_key, l.label_value FROM (n.m_node LEFT JOIN l.m_label ON n.m_api_object_id = l.object_id) LEFT JOIN m_api_object AS o ON n.fx_api_object_id = o.id WHERE n.name = ? ORDER BY n.name ASC LIMIT 5, 10;", sqlHolder.getSql());
+        Assertions.assertEquals("SELECT n.name, n.name_space, n.public_ip, n.private_ip, l.label_key, l.label_value FROM (m_node AS n LEFT JOIN m_label AS l ON n.m_api_object_id = l.object_id) LEFT JOIN m_api_object AS o ON n.fx_api_object_id = o.id WHERE n.name = ? ORDER BY n.name ASC LIMIT 5, 10;", sqlHolder.getSql());
         Assertions.assertArrayEquals(new Object[]{"menfre"}, sqlHolder.getArgs());
     }
 

@@ -32,9 +32,6 @@ public class ColumnGroup implements Join {
 
     @Override
     public String getSql() {
-        if(StrUtil.isNotEmpty(prefix)){
-            table.prefix(prefix);
-        }
         return table.value();
     }
 }

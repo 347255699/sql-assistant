@@ -33,7 +33,7 @@ public abstract class ColumnGroupSelectBuilder<T> extends AbstractSelectBuilder<
 
     public void applyPrefix() {
         this.columnGroups.forEach(cg -> {
-            cg.getTable().prefix(cg.getPrefix());
+            cg.getTable().as(cg.getPrefix());
             Columns.batchPrefix(cg.getPrefix(), cg.getColumns());
         });
     }
