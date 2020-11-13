@@ -6,7 +6,7 @@
 
     <groupId>com.github.347255699</groupId>
     <artifactId>sql-assistant</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <properties>
         <lombok.version>1.18.16</lombok.version>
