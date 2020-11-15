@@ -3,8 +3,22 @@
 
 一个简洁易用的 SQL Builder，能够让你通过 java 的链式调用方式来编写复杂的 sql 语句。
 
-## Common
+## Installation
+通过 maven 的方式引入:
+```xml
+<dependency>
+    <groupId>com.github.347255699</groupId>
+    <artifactId>sql-assistant</artifactId>
+    <version>1.0.1</version>
+</dependency>
+```
+通过 gradle 的方式引入：
+```groovy
+compile group: 'com.github.347255699', name: 'sql-assistant', version: '1.0.1'
+```
 
+## Usage
+### Quick Start
 sql-assistant 为所有的 sql 语句构造提供了统一的入口。你可以通过 `SqlAssistant` 对象来快速开始。
 ```java
 SqlHolder sqlHolder = SqlAssistant.beginSimpleSelect()
@@ -12,10 +26,10 @@ SqlHolder sqlHolder = SqlAssistant.beginSimpleSelect()
                 .from("m_node")
                 .where(Conditions.equals("name", "menfre"))
                 .end();
-System.out.println(sqlHolder.getSql());
-System.out.println(Arrays.toString(sqlHolder.getArgs()));
+log.info("my sql: {}", sqlHolder.getSql());
+log.info("my condition args: {}", Arrays.toString(sqlHolder.getArgs()));
 ```
-## SelectBuilder
+### SelectBuilder
 Select 语句根据不同的使用习惯被拆分为三种模式，当然以下三种模式均可以使用 `SqlAssistant` 来快速开始。
 
 * SimpleSelectBuilder
@@ -23,14 +37,6 @@ Select 语句根据不同的使用习惯被拆分为三种模式，当然以下�
 * JoinSelectBuilder
 
 为了迎合大部分主流的 orm 框架，`SelectBuilder` 并不会将 where 子句的条件参数拼接到 sql 语句中，而是通过 Object 数组的方式额外提供，sql 语句中的条件参数均以占位符 `?` 代替。
-
-```java
-SqlHolder sqlHolder = SqlAssistant.beginSimpleSelect()
-                .select("name_space", "name", "public_ip", "private_ip")
-                .from("m_node")
-                .where(Conditions.equals("name", "menfre"))
-                .end();
-```
 
 ### SimpleSelectBuilder
 `SimpleSelectBuilder` 是 `SelectBuilder` 中最简单的一种，能满足常见单表查询的场景。
