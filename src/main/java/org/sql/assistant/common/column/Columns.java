@@ -40,6 +40,16 @@ public class Columns {
         return new ColumnGroup("", Column.of(table), Arrays.asList(columns));
     }
 
+    private static List<Field> getFields(Class<?> tClass) {
+        List<Field> fields = new ArrayList<>();
+        Class<?> currentClass = tClass;
+        while (currentClass != null) {
+            fields.addAll(Arrays.asList(currentClass.getDeclaredFields()));
+            currentClass = currentClass.getSuperclass();
+        }
+        return fields;
+    }
+
     public static ColumnGroup[] groupByMultiEntity(Class<?> tClass) {
         MultiEntity multiEntity = tClass.getAnnotation(MultiEntity.class);
         HashMap<String, String> tableAliasMap;
@@ -57,8 +67,10 @@ public class Columns {
         tableAliasMap = new HashMap<>(tables.length, 1.0f);
         IntStream.range(0, tables.length).forEach(i -> tableAliasMap.put(tables[i], alias[i]));
         String currentColumnTable = ColumnGroup.DEFAULT_PREFIX;
-        List<Column> columns = new ArrayList<>(tClass.getDeclaredFields().length);
-        for (Field declaredField : tClass.getDeclaredFields()) {
+
+        List<Field> fields = getFields(tClass);
+        List<Column> columns = new ArrayList<>(fields.size());
+        for (Field declaredField : fields) {
             if (declaredField.getAnnotation(IgnoreColumn.class) != null) {
                 continue;
             }
@@ -101,7 +113,7 @@ public class Columns {
     }
 
     public static List<Column> asList(Class<?> tClass) {
-        return Arrays.stream(tClass.getDeclaredFields())
+        return getFields(tClass).stream()
                 .filter(f -> f.getAnnotation(IgnoreColumn.class) == null)
                 .map(f -> {
                     javax.persistence.Column columnAnnotation = f.getAnnotation(javax.persistence.Column.class);
