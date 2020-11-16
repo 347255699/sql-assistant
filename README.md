@@ -9,12 +9,12 @@
 <dependency>
     <groupId>com.github.347255699</groupId>
     <artifactId>sql-assistant</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 通过 gradle 的方式引入：
 ```groovy
-compile group: 'com.github.347255699', name: 'sql-assistant', version: '1.1.0'
+compile group: 'com.github.347255699', name: 'sql-assistant', version: '1.1.1'
 ```
 
 ## Usage
