@@ -92,9 +92,8 @@ public class SqlBuilderTest {
                 .orderBy(Sort.of("n.name", Sort.Direction.ASC))
                 .limit(5, 10)
                 .end();
-//        Assertions.assertEquals("SELECT n.name, n.name_space, n.public_ip, n.private_ip, l.label_key, l.label_value FROM (m_node AS n LEFT JOIN m_label AS l ON n.m_api_object_id = l.object_id) LEFT JOIN m_api_object AS o ON n.fx_api_object_id = o.id WHERE n.name = ? ORDER BY n.name ASC LIMIT 5, 10;", sqlHolder.getSql());
-//        Assertions.assertArrayEquals(new Object[]{"menfre"}, sqlHolder.getArgs());
-        log.info("sql: {}", sqlHolder.getSql());
+        Assertions.assertEquals("SELECT n.name, n.name_space, n.public_ip, n.private_ip, l.label_key, l.label_value FROM (m_node AS n LEFT JOIN m_label AS l ON n.m_api_object_id = l.object_id) LEFT JOIN m_api_object AS o ON n.fx_api_object_id = o.id WHERE n.name = ? ORDER BY n.name ASC LIMIT 5, 10;", sqlHolder.getSql());
+        Assertions.assertArrayEquals(new Object[]{"menfre"}, sqlHolder.getArgs());
     }
 
     @Test
@@ -107,7 +106,7 @@ public class SqlBuilderTest {
 
     @Test
     public void testIfNull() {
-        Column column = Column.of("name").prefix("a").as("aliasName").ifNull("menfre");
+        Column column = Column.of("name").prefix("a").as("aliasName").ifNull("'menfre'");
         Assertions.assertEquals("IFNULL(a.name, 'menfre') AS aliasName", column.value());
     }
 }

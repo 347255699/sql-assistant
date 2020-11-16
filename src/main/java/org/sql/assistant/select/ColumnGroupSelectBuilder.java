@@ -4,6 +4,7 @@ import org.sql.assistant.common.column.Column;
 import org.sql.assistant.common.column.ColumnGroup;
 import org.sql.assistant.common.column.Columns;
 import org.sql.assistant.util.ListUtil;
+import org.sql.assistant.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,10 +33,12 @@ public abstract class ColumnGroupSelectBuilder<T> extends AbstractSelectBuilder<
     }
 
     public void applyPrefix() {
-        this.columnGroups.forEach(cg -> {
-            cg.getTable().as(cg.getPrefix());
-            Columns.batchPrefix(cg.getPrefix(), cg.getColumns());
-        });
+        this.columnGroups.stream()
+                .filter(cg -> StrUtil.isNotEmpty(cg.getPrefix()) && !cg.getPrefix().equals(ColumnGroup.DEFAULT_PREFIX))
+                .forEach(cg -> {
+                    cg.getTable().as(cg.getPrefix());
+                    Columns.batchPrefix(cg.getPrefix(), cg.getColumns());
+                });
     }
 
     @Override

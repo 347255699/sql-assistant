@@ -3,7 +3,6 @@ package org.sql.assistant.common.column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.sql.assistant.select.join.Join;
-import org.sql.assistant.util.StrUtil;
 
 import java.util.List;
 
@@ -15,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class ColumnGroup implements Join {
+    public static final String DEFAULT_PREFIX = "default";
+
     /**
      * 前缀
      */

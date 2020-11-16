@@ -1,5 +1,6 @@
 package org.sql.assistant.common.column;
 
+import lombok.Getter;
 import org.sql.assistant.util.StrUtil;
 
 /**
@@ -21,6 +22,7 @@ public class Column {
     /**
      * 前缀
      */
+    @Getter
     private String prefix;
 
     /**
@@ -32,13 +34,8 @@ public class Column {
         this.value = value;
     }
 
-    public Column ifNull(int defaultVal) {
-        this.defaultVal = String.valueOf(defaultVal);
-        return this;
-    }
-
     public Column ifNull(String defaultVal) {
-        this.defaultVal = "'" + defaultVal + "'";
+        this.defaultVal = defaultVal;
         return this;
     }
 
