@@ -14,7 +14,7 @@
 ```
 通过 gradle 的方式引入：
 ```groovy
-compile group: 'com.github.347255699', name: 'sql-assistant', version: '1.0.1'
+compile group: 'com.github.347255699', name: 'sql-assistant', version: '1.1.0'
 ```
 
 ## Usage
