@@ -52,7 +52,6 @@ public class Columns {
 
     public static ColumnGroup[] groupByMultiEntity(Class<?> tClass) {
         MultiEntity multiEntity = tClass.getAnnotation(MultiEntity.class);
-        HashMap<String, String> tableAliasMap;
         if (multiEntity == null) {
             throw new IllegalArgumentException("The MultiEntity annotation not found");
         }
@@ -64,10 +63,11 @@ public class Columns {
         if (tables.length != alias.length) {
             throw new IllegalArgumentException("The alias length not same to the tables");
         }
-        tableAliasMap = new HashMap<>(tables.length, 1.0f);
+        HashMap<String, String> tableAliasMap = new LinkedHashMap<>(tables.length, 1.0f);
         IntStream.range(0, tables.length).forEach(i -> tableAliasMap.put(tables[i], alias[i]));
-        String currentColumnTable = ColumnGroup.DEFAULT_PREFIX;
+        tableAliasMap.put(ColumnGroup.DEFAULT_PREFIX, "");
 
+        String currentColumnTable = ColumnGroup.DEFAULT_PREFIX;
         List<Field> fields = getFields(tClass);
         List<Column> columns = new ArrayList<>(fields.size());
         for (Field declaredField : fields) {
@@ -100,14 +100,11 @@ public class Columns {
         }
 
         Map<String, List<Column>> columnGroup = columns.stream().collect(Collectors.groupingBy(Column::getPrefix));
-        return columnGroup.entrySet().stream()
-                .map(cg -> {
-                    String prefix = tableAliasMap.get(cg.getKey());
-                    if (ColumnGroup.DEFAULT_PREFIX.equals(prefix)) {
-                        prefix = "";
-                    }
-                    Column table = Column.of(cg.getKey()).as(cg.getKey());
-                    return new ColumnGroup(prefix, table, cg.getValue());
+        return tableAliasMap.keySet().stream()
+                .filter(columnGroup::containsKey)
+                .map(k -> {
+                    String prefix = tableAliasMap.get(k);
+                    return new ColumnGroup(prefix, Column.of(k).as(prefix), columnGroup.get(k));
                 })
                 .toArray(ColumnGroup[]::new);
     }
